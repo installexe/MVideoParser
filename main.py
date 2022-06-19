@@ -171,8 +171,29 @@ def get_data():
     with open('result.json', 'w', encoding='utf-8') as file:
        json.dump(items_prices, file, indent=4, ensure_ascii=False)    
 
+
+def result():
+    with open('2_items.json', encoding='utf-8') as file:
+       products_data = json.load(file)    
+    with open('result.json', encoding='utf-8') as file:
+        products_prices = json.load(file)
+
+    products_data = products_data.get('body').get('products')
+
+    for item in products_data:
+        product_id = item.get('productId')
+
+        if product_id in products_prices:
+            prices = products_prices[product_id]
+        item['item_basePrice'] = prices.get('item_basePrice')
+        item['item_salePrice'] = prices.get('item_salePrice')
+        item['item_bonus'] = prices.get('item_bonus')  
+
+    with open('result_data.json', 'w', encoding='utf-8') as file:
+        json.dump(products_data, file, indent = 4, ensure_ascii=False)         
 def main():
     get_data()
+    result()
 
 if __name__ == '__main__':
     main()
